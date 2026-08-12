@@ -1,4 +1,4 @@
-package com.example.cookie.model;
+package com.restaurant.cookie.model;
 
 import jakarta.persistence.*;
 import lombok.*;

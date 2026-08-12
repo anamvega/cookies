@@ -1,6 +1,6 @@
-package com.example.cookie.repository;
+package com.restaurant.cookie.repository;
 
-import com.example.cookie.model.Registro;
+import com.restaurant.cookie.model.Registro;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
