@@ -14,16 +14,16 @@ public interface RegistroRepository extends JpaRepository<Registro, Long> {
 
     // Active Record style queries
     List<Registro> findByDescripcion(String descripcion);
-    
+
     List<Registro> findByPrecioGreaterThan(BigDecimal precio);
-    
+
     List<Registro> findByPrecioLessThan(BigDecimal precio);
-    
+
     Optional<Registro> findById(Long id);
-    
+
     boolean existsByDescripcion(String descripcion);
-    
+
     Long count();
-    
+
     void deleteById(Long id);
 }
