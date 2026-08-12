@@ -1,7 +1,7 @@
-package com.example.cookie.service;
+package com.restaurant.cookie.service;
 
-import com.example.cookie.gateway.RegistroGateway;
-import com.example.cookie.model.Registro;
+import com.restaurant.cookie.gateway.RegistroGateway;
+import com.restaurant.cookie.model.Registro;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

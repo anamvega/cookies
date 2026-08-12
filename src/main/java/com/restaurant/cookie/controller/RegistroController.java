@@ -1,7 +1,7 @@
-package com.example.cookie.controller;
+package com.restaurant.cookie.controller;
 
-import com.example.cookie.model.Registro;
-import com.example.cookie.service.RegistroService;
+import com.restaurant.cookie.model.Registro;
+import com.restaurant.cookie.service.RegistroService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
