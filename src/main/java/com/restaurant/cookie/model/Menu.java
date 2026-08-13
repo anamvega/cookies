@@ -2,7 +2,6 @@ package com.restaurant.cookie.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +23,16 @@ public class Menu {
     @Column(nullable = false)
     private BigDecimal precio;
     
-    @OneToMany(mappedBy = "registro", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    @JsonManagedReference
+    @Column(nullable = false)
+    @Builder.Default
+    private Integer estado = 0; // 0 = disponible, 1 = no disponible
+    
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "menu_ingredientes",
+        joinColumns = @JoinColumn(name = "menu_id"),
+        inverseJoinColumns = @JoinColumn(name = "ingrediente_id")
+    )
     @Builder.Default
     private List<Ingrediente> ingredientes = new ArrayList<>();
 }

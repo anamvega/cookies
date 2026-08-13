@@ -18,8 +18,10 @@ public class Ingrediente {
     @Column(nullable = false)
     private String nombre;
     
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "registro_id", nullable = false)
-    @JsonBackReference
-    private Menu registro;
+    @Column(nullable = false)
+    private Double cantidad;
+    
+    @Column(nullable = false)
+    private String unidad; // ej: kg, g, ml, l, etc.
+
 }
