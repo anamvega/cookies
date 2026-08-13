@@ -1,6 +1,6 @@
-# Cookie Service
+# Cookie Restaurant Service
 
-Servicio REST desarrollado con Java 17, Spring Boot, Gradle, H2 y arquitectura MVC con patrón Gateway.
+Servicio REST para gestión de menú e ingredientes en un restaurante de cookies. Desarrollado con Java 17, Spring Boot, Gradle, H2 y arquitectura MVC con patrón Gateway.
 
 ## Tecnologías
 
@@ -10,6 +10,11 @@ Servicio REST desarrollado con Java 17, Spring Boot, Gradle, H2 y arquitectura M
 - **H2 Database** (base de datos en memoria)
 - **Lombok** (reducción de boilerplate)
 - **Gradle 8.5**
+- **JUnit 5** (testing)
+
+## Descripción del Proyecto
+
+Aplicación de gestión de menú para un restaurante especializado en cookies. Permite crear, actualizar y gestionar productos del menú junto con sus ingredientes asociados. Utiliza una arquitectura en capas con el patrón Gateway para abstraer la capa de acceso a datos.
 
 ## Arquitectura
 
@@ -18,16 +23,16 @@ El proyecto sigue una arquitectura MVC estratificada con los siguientes componen
 ```
 ┌─────────────────────────────────────────────────────────┐
 │                    Controller Layer                      │
-│              RegistroController.java                     │
+│      MenuController | IngredienteController             │
 ├─────────────────────────────────────────────────────────┤
 │                    Service Layer                         │
-│                RegistroService.java                      │
+│      MenuService | IngredienteService                   │
 ├─────────────────────────────────────────────────────────┤
 │                    Gateway Layer                         │
-│              RegistroGateway.java                        │
+│      MenuGateway | IngredienteGateway                    │
 ├─────────────────────────────────────────────────────────┤
 │                  Repository Layer                        │
-│           RegistroRepository.java                        │
+│    MenuRepository | IngredienteRepository                │
 ├─────────────────────────────────────────────────────────┤
 │                 Database Layer                           │
 │                    H2 Database                           │
@@ -37,7 +42,7 @@ El proyecto sigue una arquitectura MVC estratificada con los siguientes componen
 ### Capas
 
 1. **Controller (MVC - View/Controller)**: Expone endpoints REST y maneja las peticiones HTTP
-2. **Service**: Contiene la lógica de negocio
+2. **Service**: Contiene la lógica de negocio y validaciones
 3. **Gateway (Patrón Gateway)**: Actúa como intermediario entre la capa de servicio y el repositorio, abstrayendo el acceso a datos
 4. **Repository (ORM)**: Interfaz Spring Data JPA para acceso directo a la base de datos
 5. **Model (MVC - Model)**: Entidades JPA que mapean a tablas de la base de datos
@@ -47,32 +52,66 @@ El proyecto sigue una arquitectura MVC estratificada con los siguientes componen
 ```
 src/main/java/com/restaurant/cookie/
 ├── CookieApplication.java          # Clase principal Spring Boot
+├── config/                          # Configuración de la aplicación
 ├── controller/
-│   └── RegistroController.java     # Endpoint REST
+│   ├── MenuController.java          # Endpoints para gestión de menú
+│   └── IngredienteController.java   # Endpoints para gestión de ingredientes
 ├── model/
-│   └── Registro.java               # Entidad JPA
+│   ├── Menu.java                    # Entidad Menu con relación many-to-many
+│   └── Ingrediente.java             # Entidad Ingrediente
 ├── repository/
-│   └── RegistroRepository.java     # Repositorio Spring Data JPA
+│   ├── MenuRepository.java          # Repositorio Spring Data JPA para Menu
+│   └── IngredienteRepository.java   # Repositorio Spring Data JPA para Ingrediente
 ├── gateway/
-│   └── RegistroGateway.java        # Patrón Gateway
+│   ├── MenuGateway.java             # Patrón Gateway para Menu
+│   └── IngredienteGateway.java      # Patrón Gateway para Ingrediente
 └── service/
-    └── RegistroService.java        # Servicio de negocio
+    ├── MenuService.java             # Servicio de negocio para Menu
+    ├── IngredienteService.java      # Servicio de negocio para Ingrediente
+    └── ValidacionIngredienteService.java  # Validaciones específicas
 
 src/main/resources/
-└── application.properties          # Configuración de la aplicación
+└── application.properties           # Configuración de la aplicación
+
+src/test/java/com/restaurant/cookie/
+└── controller/
+    └── MenuControllerIntegrationTest.java  # Tests de integración
 ```
+
+## Modelo de Datos
+
+### Entidades
+
+**Menu**
+- id (Long) - ID auto-generado
+- descripcion (String) - Descripción del producto
+- precio (BigDecimal) - Precio del producto
+- estado (Integer) - 0 = disponible, 1 = no disponible
+- ingredientes (List<Ingrediente>) - Relación many-to-many
+
+**Ingrediente**
+- id (Long) - ID auto-generado
+- nombre (String) - Nombre del ingrediente
+- descripcion (String) - Descripción del ingrediente
+
+**Tabla de Relación: menu_ingredientes**
+- menu_id (Long) - FK a Menu
+- ingrediente_id (Long) - FK a Ingrediente
 
 ## Endpoints
 
-### Crear Registro
+### Menú
+
+#### Crear nuevo plato
 
 ```
 POST /registros
 Content-Type: application/json
 
 {
-  "descripcion": "Descripción del producto",
-  "precio": 29.99
+  "descripcion": "Cookie de Chocolate",
+  "precio": 29.99,
+  "ingredientesIds": [1, 2, 3]
 }
 ```
 
@@ -80,37 +119,50 @@ Content-Type: application/json
 ```json
 {
   "id": 1,
-  "descripcion": "Descripción del producto",
-  "precio": 29.99
+  "descripcion": "Cookie de Chocolate",
+  "precio": 29.99,
+  "estado": 0,
+  "ingredientes": [...]
 }
 ```
 
-### Obtener Todos los Registros
+#### Obtener todos los platos
 
 ```
 GET /registros
 ```
 
-**Respuesta:**
-```json
-[
-  {
-    "id": 1,
-    "descripcion": "Descripción del producto",
-    "precio": 29.99
-  }
-]
+#### Obtener plato por ID
+
+```
+GET /registros/{id}
 ```
 
-## Tabla en la Base de Datos
+### Ingredientes
 
-La base de datos H2 contiene la tabla `registros`:
+#### Crear ingrediente
 
-| Columna     | Tipo       | Descripción          |
-|-------------|------------|----------------------|
-| id          | BIGINT     | ID auto-generado     |
-| descripcion | VARCHAR    | Descripción del registro |
-| precio      | DECIMAL    | Precio del registro  |
+```
+POST /ingredientes
+Content-Type: application/json
+
+{
+  "nombre": "Chocolate",
+  "descripcion": "Chocolate negro"
+}
+```
+
+#### Obtener todos los ingredientes
+
+```
+GET /ingredientes
+```
+
+#### Obtener ingrediente por ID
+
+```
+GET /ingredientes/{id}
+```
 
 ## Cómo Ejecutar
 
@@ -135,16 +187,30 @@ La base de datos H2 contiene la tabla `registros`:
    - API: `http://localhost:8080`
    - H2 Console: `http://localhost:8080/h2-console`
 
+### Ejecutar Tests
+
+```bash
+./gradlew test
+```
+
 ### Ejemplo con cURL
 
 ```bash
-# Crear un registro
+# Crear un ingrediente
+curl -X POST http://localhost:8080/ingredientes \
+  -H "Content-Type: application/json" \
+  -d '{"nombre":"Chocolate","descripcion":"Chocolate negro"}'
+
+# Crear un plato con ingredientes
 curl -X POST http://localhost:8080/registros \
   -H "Content-Type: application/json" \
-  -d '{"descripcion":"Producto de ejemplo","precio":49.99}'
+  -d '{"descripcion":"Cookie de Chocolate","precio":29.99,"ingredientesIds":[1,2]}'
 
-# Obtener todos los registros
+# Obtener todos los platos
 curl http://localhost:8080/registros
+
+# Obtener todos los ingredientes
+curl http://localhost:8080/ingredientes
 ```
 
 ## Configuración
@@ -158,7 +224,7 @@ La configuración se encuentra en `src/main/resources/application.properties`:
 
 ## Patrón Gateway
 
-El patrón Gateway en `MenuGateway` actúa como una capa de abstracción entre el servicio y el repositorio:
+El patrón Gateway actúa como una capa de abstracción entre la capa de servicio y los repositorios:
 
 - **Encapsula** la lógica de acceso a datos
 - **Desacopla** la capa de servicio de la implementación del repositorio
@@ -168,8 +234,8 @@ El patrón Gateway en `MenuGateway` actúa como una capa de abstracción entre e
 ```java
 // El servicio usa el Gateway, no el repositorio directamente
 @Service
-public class RegistroService {
-    private final RegistroGateway registroGateway;
+public class MenuService {
+    private final MenuGateway menuGateway;
     // ...
 }
 ```
