@@ -45,3 +45,7 @@ Thumbs.db
 # Método Ceiba - Worktrees y script auxiliar
 ceiba-worktree.js
 /worktrees/
+
+# Ceiba Method workspace (auto-generated)
+.vscode/ceiba.code-workspace
+.venv
