@@ -13,15 +13,15 @@ public interface MenuRepository extends JpaRepository<Menu, Long> {
     List<Menu> findAll();
 
     // Active Record style queries
-    List<Menu> findByDescripcion(String descripcion);
+    List<Menu> findByDescription(String description);
 
-    List<Menu> findByPrecioGreaterThan(BigDecimal precio);
+    List<Menu> findByPriceGreaterThan(BigDecimal precio);
 
-    List<Menu> findByPrecioLessThan(BigDecimal precio);
+    List<Menu> findByPriceLessThan(BigDecimal precio);
 
     Optional<Menu> findById(Long id);
 
-    boolean existsByDescripcion(String descripcion);
+    boolean existsByDescription(String description);
 
     void deleteById(Long id);
 }

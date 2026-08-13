@@ -18,21 +18,21 @@ public class Menu {
     private Long id;
     
     @Column(nullable = false)
-    private String descripcion;
+    private String description;
     
     @Column(nullable = false)
-    private BigDecimal precio;
+    private BigDecimal price;
     
     @Column(nullable = false)
     @Builder.Default
-    private Integer estado = 0; // 0 = disponible, 1 = no disponible
+    private Integer status = 0; // 0 = available, 1 = not available
     
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-        name = "menu_ingredientes",
+        name = "menu_ingredients",
         joinColumns = @JoinColumn(name = "menu_id"),
-        inverseJoinColumns = @JoinColumn(name = "ingrediente_id")
+        inverseJoinColumns = @JoinColumn(name = "ingredient_id")
     )
     @Builder.Default
-    private List<Ingrediente> ingredientes = new ArrayList<>();
+    private List<Ingredient> ingredients = new ArrayList<>();
 }

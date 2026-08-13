@@ -1,7 +1,7 @@
 package com.restaurant.cookie.service;
 
-import com.restaurant.cookie.model.Ingrediente;
-import com.restaurant.cookie.repository.IngredienteRepository;
+import com.restaurant.cookie.model.Ingredient;
+import com.restaurant.cookie.repository.IngredientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,77 +11,77 @@ import java.util.List;
 @RequiredArgsConstructor
 public class IngredienteService {
 
-    private final IngredienteRepository ingredienteRepository;
+    private final IngredientRepository ingredientRepository;
 
     /**
-     * Crear un nuevo ingrediente
+     * Crear un nuevo ingredient
      */
-    public Ingrediente crearIngrediente(Ingrediente ingrediente) {
-        validarIngrediente(ingrediente);
-        return ingredienteRepository.save(ingrediente);
+    public Ingredient crearIngrediente(Ingredient ingredient) {
+        validarIngrediente(ingredient);
+        return ingredientRepository.save(ingredient);
     }
 
     /**
-     * Obtener todos los ingredientes
+     * Obtener todos los ingredients
      */
-    public List<Ingrediente> obtenerTodos() {
-        return ingredienteRepository.findAll();
+    public List<Ingredient> obtenerTodos() {
+        return ingredientRepository.findAll();
     }
 
     /**
      * Obtener un ingrediente por ID
      */
-    public Ingrediente obtenerPorId(Long id) {
-        return ingredienteRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Ingrediente no encontrado con id: " + id));
+    public Ingredient obtenerPorId(Long id) {
+        return ingredientRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Ingredient no encontrado con id: " + id));
     }
 
     /**
      * Actualizar un ingrediente
      */
-    public Ingrediente actualizarIngrediente(Long id, Ingrediente ingredienteActualizado) {
-        Ingrediente ingrediente = obtenerPorId(id);
+    public Ingredient actualizarIngrediente(Long id, Ingredient ingredientUpdated) {
+        Ingredient ingredient = obtenerPorId(id);
         
-        if (ingredienteActualizado.getNombre() != null && !ingredienteActualizado.getNombre().isBlank()) {
-            ingrediente.setNombre(ingredienteActualizado.getNombre());
+        if (ingredientUpdated.getName() != null && !ingredientUpdated.getName().isBlank()) {
+            ingredient.setName(ingredientUpdated.getName());
         }
         
-        if (ingredienteActualizado.getCantidad() != null) {
-            ingrediente.setCantidad(ingredienteActualizado.getCantidad());
+        if (ingredientUpdated.getQuantity() != null) {
+            ingredient.setQuantity(ingredientUpdated.getQuantity());
         }
         
-        if (ingredienteActualizado.getUnidad() != null && !ingredienteActualizado.getUnidad().isBlank()) {
-            ingrediente.setUnidad(ingredienteActualizado.getUnidad());
+        if (ingredientUpdated.getUnit() != null && !ingredientUpdated.getUnit().isBlank()) {
+            ingredient.setUnit(ingredientUpdated.getUnit());
         }
         
-        validarIngrediente(ingrediente);
-        return ingredienteRepository.save(ingrediente);
+        validarIngrediente(ingredient);
+        return ingredientRepository.save(ingredient);
     }
 
     /**
      * Eliminar un ingrediente
      */
     public void eliminarIngrediente(Long id) {
-        if (!ingredienteRepository.existsById(id)) {
-            throw new RuntimeException("Ingrediente no encontrado con id: " + id);
+        if (!ingredientRepository.existsById(id)) {
+            throw new RuntimeException("Ingredient no encontrado con id: " + id);
         }
-        ingredienteRepository.deleteById(id);
+        ingredientRepository.deleteById(id);
     }
 
     /**
-     * Validar los datos del ingrediente
+     * Validar los datos del ingredient
      */
-    private void validarIngrediente(Ingrediente ingrediente) {
-        if (ingrediente.getNombre() == null || ingrediente.getNombre().isBlank()) {
-            throw new IllegalArgumentException("El nombre del ingrediente es obligatorio");
+    private void validarIngrediente(Ingredient ingredient) {
+        if (ingredient.getName() == null || ingredient.getName().isBlank()) {
+            throw new IllegalArgumentException("Ingredient name is required");
         }
         
-        if (ingrediente.getCantidad() == null || ingrediente.getCantidad() <= 0) {
-            throw new IllegalArgumentException("La cantidad debe ser mayor a 0");
+        if (ingredient.getQuantity() == null || ingredient.getQuantity() <= 0) {
+            throw new IllegalArgumentException("Quantity must be greater than 0");
         }
         
-        if (ingrediente.getUnidad() == null || ingrediente.getUnidad().isBlank()) {
-            throw new IllegalArgumentException("La unidad de medida es obligatoria");
+        if (ingredient.getUnit() == null || ingredient.getUnit().isBlank()) {
+            throw new IllegalArgumentException("Unit of measure is required");
         }
     }
 }

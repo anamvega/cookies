@@ -1,6 +1,6 @@
 # Cookie Restaurant Service
 
-Servicio REST para gestión de menú e ingredientes en un restaurante de cookies. Desarrollado con Java 17, Spring Boot, Gradle, H2 y arquitectura MVC con patrón Gateway.
+Servicio REST para gestión de menú e ingredients en un restaurante de cookies. Desarrollado con Java 17, Spring Boot, Gradle, H2 y arquitectura MVC con patrón Gateway.
 
 ## Tecnologías
 
@@ -14,7 +14,7 @@ Servicio REST para gestión de menú e ingredientes en un restaurante de cookies
 
 ## Descripción del Proyecto
 
-Aplicación de gestión de menú para un restaurante especializado en cookies. Permite crear, actualizar y gestionar productos del menú junto con sus ingredientes asociados. Utiliza una arquitectura en capas con el patrón Gateway para abstraer la capa de acceso a datos.
+Aplicación de gestión de menú para un restaurante especializado en cookies. Permite crear, actualizar y gestionar productos del menú junto con sus ingredients asociados. Utiliza una arquitectura en capas con el patrón Gateway para abstraer la capa de acceso a datos.
 
 ## Arquitectura
 
@@ -55,7 +55,7 @@ src/main/java/com/restaurant/cookie/
 ├── config/                          # Configuración de la aplicación
 ├── controller/
 │   ├── MenuController.java          # Endpoints para gestión de menú
-│   └── IngredienteController.java   # Endpoints para gestión de ingredientes
+│   └── IngredienteController.java   # Endpoints para gestión de ingredients
 ├── model/
 │   ├── Menu.java                    # Entidad Menu con relación many-to-many
 │   └── Ingrediente.java             # Entidad Ingrediente
@@ -87,12 +87,12 @@ src/test/java/com/restaurant/cookie/
 - descripcion (String) - Descripción del producto
 - precio (BigDecimal) - Precio del producto
 - estado (Integer) - 0 = disponible, 1 = no disponible
-- ingredientes (List<Ingrediente>) - Relación many-to-many
+- ingredients (List<Ingrediente>) - Relación many-to-many
 
 **Ingrediente**
 - id (Long) - ID auto-generado
-- nombre (String) - Nombre del ingrediente
-- descripcion (String) - Descripción del ingrediente
+- nombre (String) - Nombre del ingredient
+- descripcion (String) - Descripción del ingredient
 
 **Tabla de Relación: menu_ingredientes**
 - menu_id (Long) - FK a Menu
@@ -122,7 +122,7 @@ Content-Type: application/json
   "descripcion": "Cookie de Chocolate",
   "precio": 29.99,
   "estado": 0,
-  "ingredientes": [...]
+  "ingredients": [...]
 }
 ```
 
@@ -140,10 +140,10 @@ GET /registros/{id}
 
 ### Ingredientes
 
-#### Crear ingrediente
+#### Crear ingredient
 
 ```
-POST /ingredientes
+POST /ingredients
 Content-Type: application/json
 
 {
@@ -152,16 +152,16 @@ Content-Type: application/json
 }
 ```
 
-#### Obtener todos los ingredientes
+#### Obtener todos los ingredients
 
 ```
-GET /ingredientes
+GET /ingredients
 ```
 
-#### Obtener ingrediente por ID
+#### Obtener ingredient por ID
 
 ```
-GET /ingredientes/{id}
+GET /ingredients/{id}
 ```
 
 ## Cómo Ejecutar
@@ -196,12 +196,12 @@ GET /ingredientes/{id}
 ### Ejemplo con cURL
 
 ```bash
-# Crear un ingrediente
-curl -X POST http://localhost:8080/ingredientes \
+# Crear un ingredient
+curl -X POST http://localhost:8080/ingredients \
   -H "Content-Type: application/json" \
   -d '{"nombre":"Chocolate","descripcion":"Chocolate negro"}'
 
-# Crear un plato con ingredientes
+# Crear un plato con ingredients
 curl -X POST http://localhost:8080/registros \
   -H "Content-Type: application/json" \
   -d '{"descripcion":"Cookie de Chocolate","precio":29.99,"ingredientesIds":[1,2]}'
@@ -209,8 +209,8 @@ curl -X POST http://localhost:8080/registros \
 # Obtener todos los platos
 curl http://localhost:8080/registros
 
-# Obtener todos los ingredientes
-curl http://localhost:8080/ingredientes
+# Obtener todos los ingredients
+curl http://localhost:8080/ingredients
 ```
 
 ## Configuración

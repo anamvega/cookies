@@ -23,28 +23,28 @@ public class MenuController {
     @PostMapping
     public ResponseEntity<Menu> crearNuevoPlato(@RequestBody Map<String, Object> request) {
         try {
-            String descripcion = (String) request.get("descripcion");
-            Object precioRaw = request.get("precio");
-            Double precio = precioRaw instanceof Number ? ((Number) precioRaw).doubleValue() : null;
+            String description = (String) request.get("description");
+            Object priceRaw = request.get("price");
+            Double price = priceRaw instanceof Number ? ((Number) priceRaw).doubleValue() : null;
             
             @SuppressWarnings("unchecked")
             List<Integer> ingredientesIds = (List<Integer>) request.get("ingredientesIds");
 
-            if (descripcion == null || descripcion.isBlank()) {
-                throw new IllegalArgumentException("La descripcion es obligatoria");
+            if (description == null || description.isBlank()) {
+                throw new IllegalArgumentException("Description is required");
             }
-            if (precio == null) {
-                throw new IllegalArgumentException("El precio es obligatorio");
+            if (price == null) {
+                throw new IllegalArgumentException("Price is required");
             }
 
             Menu registro = Menu.builder()
-                    .descripcion(descripcion)
-                    .precio(BigDecimal.valueOf(precio))
+                    .description(description)
+                    .price(BigDecimal.valueOf(price))
                     .build();
 
             Menu registroGuardado = menuService.crearRegistro(registro);
             
-            // Agregar ingredientes por ID después de guardar el registro
+            // Agregar ingredients por ID después de guardar el registro
             if (ingredientesIds != null && !ingredientesIds.isEmpty()) {
                 registroGuardado = menuService.agregarIngredientesAlRegistro(registroGuardado.getId(), ingredientesIds);
             }
@@ -106,21 +106,21 @@ public class MenuController {
     }
 
     /**
-     * GET /registros/{id}/ingredientes-faltantes
-     * Obtener ingredientes que faltan para un registro específico
+     * GET /registros/{id}/ingredients-faltantes
+     * Obtener ingredients que faltan para un registro específico
      */
-    @GetMapping("/{id}/ingredientes-faltantes")
+    @GetMapping("/{id}/ingredients-faltantes")
     public ResponseEntity<Map<String, Object>> obtenerIngredientesFaltantes(@PathVariable Long id) {
         try {
             Menu registro = menuService.obtenerRegistroPorId(id);
-            List<String> ingredientesFaltantes = validacionIngredienteService
-                    .obtenerIngredientesNoDisponibles(registro.getIngredientes());
+            List<String> missingIngredients = validacionIngredienteService
+                    .obtenerIngredientesNoDisponibles(registro.getIngredients());
             
             return ResponseEntity.ok(Map.of(
                 "id", id,
-                "descripcion", registro.getDescripcion(),
-                "estado", registro.getEstado(),
-                "ingredientesFaltantes", ingredientesFaltantes
+                "description", registro.getDescription(),
+                "status", registro.getStatus(),
+                "missingIngredients", missingIngredients
             ));
         } catch (RuntimeException e) {
             throw e;
@@ -142,11 +142,11 @@ public class MenuController {
     }
 
     /**
-     * POST /registros/{id}/agregar-ingredientes
-     * Agregar ingredientes existentes al registro por sus IDs
+     * POST /registros/{id}/agregar-ingredients
+     * Agregar ingredients existentes al registro por sus IDs
      * Body: { "ingredientesIds": [1, 2, 3] }
      */
-    @PostMapping("/{id}/agregar-ingredientes")
+    @PostMapping("/{id}/agregar-ingredients")
     public ResponseEntity<Menu> agregarIngredientes(
             @PathVariable Long id,
             @RequestBody Map<String, Object> request) {
@@ -166,7 +166,7 @@ public class MenuController {
         } catch (RuntimeException e) {
             throw e;
         } catch (Exception e) {
-            throw new RuntimeException("Error al agregar ingredientes: " + e.getMessage(), e);
+            throw new RuntimeException("Error al agregar ingredients: " + e.getMessage(), e);
         }
     }
 }

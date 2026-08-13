@@ -1,6 +1,6 @@
 package com.restaurant.cookie.controller;
 
-import com.restaurant.cookie.model.Ingrediente;
+import com.restaurant.cookie.model.Ingredient;
 import com.restaurant.cookie.service.IngredienteService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -21,46 +21,46 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("IngredienteController Tests")
-class IngredienteControllerTest {
+class IngredientControllerTest {
 
     @Mock
     private IngredienteService ingredienteService;
 
     @InjectMocks
-    private IngredienteController ingredienteController;
+    private IngredientController ingredientController;
 
-    private Ingrediente ingrediente;
+    private Ingredient ingredient;
 
     @BeforeEach
     void setUp() {
-        ingrediente = Ingrediente.builder()
+        ingredient = Ingredient.builder()
                 .id(1L)
-                .nombre("Chocolate")
-                .cantidad(500.0)
-                .unidad("g")
+                .name("Chocolate")
+                .quantity(500.0)
+                .unit("g")
                 .build();
     }
 
     @Test
-    @DisplayName("POST - Debe crear un ingrediente válido")
+    @DisplayName("POST - Debe crear un ingredient válido")
     void testCrearIngredienteValido() {
         // Arrange
-        when(ingredienteService.crearIngrediente(any(Ingrediente.class))).thenReturn(ingrediente);
+        when(ingredienteService.crearIngrediente(any(Ingredient.class))).thenReturn(ingredient);
 
         Map<String, Object> request = Map.of(
-            "nombre", "Chocolate",
-            "cantidad", 500.0,
-            "unidad", "g"
+            "name", "Chocolate",
+            "quantity", 500.0,
+            "unit", "g"
         );
 
         // Act
-        ResponseEntity<Ingrediente> resultado = ingredienteController.crearIngrediente(request);
+        ResponseEntity<Ingredient> result = ingredientController.crearIngrediente(request);
 
         // Assert
-        assertNotNull(resultado);
-        assertEquals(HttpStatus.CREATED, resultado.getStatusCode());
-        assertEquals("Chocolate", resultado.getBody().getNombre());
-        verify(ingredienteService, times(1)).crearIngrediente(any(Ingrediente.class));
+        assertNotNull(result);
+        assertEquals(HttpStatus.CREATED, result.getStatusCode());
+        assertEquals("Chocolate", result.getBody().getName());
+        verify(ingredienteService, times(1)).crearIngrediente(any(Ingredient.class));
     }
 
     @Test
@@ -74,20 +74,20 @@ class IngredienteControllerTest {
 
         // Act & Assert
         assertThrows(IllegalArgumentException.class, () -> 
-            ingredienteController.crearIngrediente(request)
+            ingredientController.crearIngrediente(request)
         );
         verify(ingredienteService, never()).crearIngrediente(any());
     }
 
     @Test
-    @DisplayName("GET - Debe retornar lista de ingredientes")
+    @DisplayName("GET - Debe retornar lista de ingredients")
     void testObtenerTodos() {
         // Arrange
-        List<Ingrediente> ingredientes = List.of(ingrediente);
-        when(ingredienteService.obtenerTodos()).thenReturn(ingredientes);
+        List<Ingredient> ingredients = List.of(ingredient);
+        when(ingredienteService.obtenerTodos()).thenReturn(ingredients);
 
         // Act
-        ResponseEntity<List<Ingrediente>> resultado = ingredienteController.obtenerTodos();
+        ResponseEntity<List<Ingredient>> resultado = ingredientController.obtenerTodos();
 
         // Assert
         assertNotNull(resultado);
@@ -97,59 +97,59 @@ class IngredienteControllerTest {
     }
 
     @Test
-    @DisplayName("GET /{id} - Debe retornar ingrediente por ID")
+    @DisplayName("GET /{id} - Debe retornar ingredient por ID")
     void testObtenerPorId() {
         // Arrange
-        when(ingredienteService.obtenerPorId(1L)).thenReturn(ingrediente);
+        when(ingredienteService.obtenerPorId(1L)).thenReturn(ingredient);
 
         // Act
-        ResponseEntity<Ingrediente> resultado = ingredienteController.obtenerPorId(1L);
+        ResponseEntity<Ingredient> result = ingredientController.obtenerPorId(1L);
 
         // Assert
-        assertNotNull(resultado);
-        assertEquals(HttpStatus.OK, resultado.getStatusCode());
-        assertEquals("Chocolate", resultado.getBody().getNombre());
+        assertNotNull(result);
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertEquals("Chocolate", result.getBody().getName());
         verify(ingredienteService, times(1)).obtenerPorId(1L);
     }
 
     @Test
-    @DisplayName("PUT /{id} - Debe actualizar ingrediente")
+    @DisplayName("PUT /{id} - Debe actualizar ingredient")
     void testActualizarIngrediente() {
         // Arrange
-        Ingrediente actualizado = Ingrediente.builder()
+        Ingredient updated = Ingredient.builder()
                 .id(1L)
-                .nombre("Chocolate Blanco")
-                .cantidad(750.0)
-                .unidad("g")
+                .name("White Chocolate")
+                .quantity(750.0)
+                .unit("g")
                 .build();
 
-        when(ingredienteService.actualizarIngrediente(eq(1L), any(Ingrediente.class)))
-                .thenReturn(actualizado);
+        when(ingredienteService.actualizarIngrediente(eq(1L), any(Ingredient.class)))
+                .thenReturn(updated);
 
         Map<String, Object> request = Map.of(
-            "nombre", "Chocolate Blanco",
-            "cantidad", 750.0,
-            "unidad", "g"
+            "name", "White Chocolate",
+            "quantity", 750.0,
+            "unit", "g"
         );
 
         // Act
-        ResponseEntity<Ingrediente> resultado = ingredienteController.actualizarIngrediente(1L, request);
+        ResponseEntity<Ingredient> result = ingredientController.actualizarIngrediente(1L, request);
 
         // Assert
-        assertNotNull(resultado);
-        assertEquals(HttpStatus.OK, resultado.getStatusCode());
-        assertEquals("Chocolate Blanco", resultado.getBody().getNombre());
+        assertNotNull(result);
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertEquals("White Chocolate", result.getBody().getName());
         verify(ingredienteService, times(1)).actualizarIngrediente(eq(1L), any());
     }
 
     @Test
-    @DisplayName("DELETE /{id} - Debe eliminar ingrediente")
+    @DisplayName("DELETE /{id} - Debe eliminar ingredient")
     void testEliminarIngrediente() {
         // Arrange
         doNothing().when(ingredienteService).eliminarIngrediente(1L);
 
         // Act
-        ResponseEntity<Void> resultado = ingredienteController.eliminarIngrediente(1L);
+        ResponseEntity<Void> resultado = ingredientController.eliminarIngrediente(1L);
 
         // Assert
         assertNotNull(resultado);

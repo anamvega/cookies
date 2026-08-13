@@ -35,10 +35,10 @@ class MenuGatewayTest {
     void setUp() {
         menu = Menu.builder()
                 .id(1L)
-                .descripcion("Cookie de Chocolate")
-                .precio(BigDecimal.valueOf(29.99))
-                .estado(0)
-                .ingredientes(new ArrayList<>())
+                .description("Cookie de Chocolate")
+                .price(BigDecimal.valueOf(29.99))
+                .status(0)
+                .ingredients(new ArrayList<>())
                 .build();
     }
 
@@ -54,8 +54,8 @@ class MenuGatewayTest {
         // Assert
         assertNotNull(resultado);
         assertEquals(1L, resultado.getId());
-        assertEquals("Cookie de Chocolate", resultado.getDescripcion());
-        assertEquals(BigDecimal.valueOf(29.99), resultado.getPrecio());
+        assertEquals("Cookie de Chocolate", resultado.getDescription());
+        assertEquals(BigDecimal.valueOf(29.99), result.getPrice());
         verify(menuRepository, times(1)).save(any(Menu.class));
     }
 
@@ -63,19 +63,19 @@ class MenuGatewayTest {
     @DisplayName("Save - Debe retornar el menú guardado con ID generado")
     void testSaveRetornaMenuConId() {
         // Arrange
-        Menu menuSinId = Menu.builder()
-                .descripcion("Cookie de Vainilla")
-                .precio(BigDecimal.valueOf(24.99))
-                .estado(0)
-                .ingredientes(new ArrayList<>())
+        Menu menuWithoutId = Menu.builder()
+                .description("Cookie de Vainilla")
+                .price(BigDecimal.valueOf(24.99))
+                .status(0)
+                .ingredients(new ArrayList<>())
                 .build();
 
-        Menu menuGuardado = Menu.builder()
+        Menu savedMenu = Menu.builder()
                 .id(2L)
-                .descripcion("Cookie de Vainilla")
-                .precio(BigDecimal.valueOf(24.99))
-                .estado(0)
-                .ingredientes(new ArrayList<>())
+                .description("Cookie de Vainilla")
+                .price(BigDecimal.valueOf(24.99))
+                .status(0)
+                .ingredients(new ArrayList<>())
                 .build();
 
         when(menuRepository.save(any(Menu.class))).thenReturn(menuGuardado);
@@ -96,10 +96,10 @@ class MenuGatewayTest {
         // Arrange
         Menu menu2 = Menu.builder()
                 .id(2L)
-                .descripcion("Cookie de Vainilla")
-                .precio(BigDecimal.valueOf(24.99))
-                .estado(0)
-                .ingredientes(new ArrayList<>())
+                .description("Cookie de Vainilla")
+                .price(BigDecimal.valueOf(24.99))
+                .status(0)
+                .ingredients(new ArrayList<>())
                 .build();
 
         List<Menu> menus = List.of(menu, menu2);
@@ -111,8 +111,8 @@ class MenuGatewayTest {
         // Assert
         assertNotNull(resultado);
         assertEquals(2, resultado.size());
-        assertEquals("Cookie de Chocolate", resultado.get(0).getDescripcion());
-        assertEquals("Cookie de Vainilla", resultado.get(1).getDescripcion());
+        assertEquals("Cookie de Chocolate", resultado.get(0).getDescription());
+        assertEquals("Cookie de Vainilla", resultado.get(1).getDescription());
         verify(menuRepository, times(1)).findAll();
     }
 
@@ -143,7 +143,7 @@ class MenuGatewayTest {
         // Assert
         assertTrue(resultado.isPresent());
         assertEquals(1L, resultado.get().getId());
-        assertEquals("Cookie de Chocolate", resultado.get().getDescripcion());
+        assertEquals("Cookie de Chocolate", resultado.get().getDescription());
         verify(menuRepository, times(1)).findById(1L);
     }
 
@@ -220,16 +220,16 @@ class MenuGatewayTest {
     @DisplayName("Abstracción - Debe ocultar la implementación del repositorio")
     void testAbstraccionDelRepositorio() {
         // Arrange - El gateway debe actuar como intermediario
-        Menu menuPrueba = Menu.builder()
-                .descripcion("Cookie de Prueba")
-                .precio(BigDecimal.valueOf(19.99))
+        Menu testMenu = Menu.builder()
+                .description("Test Cookie")
+                .price(BigDecimal.valueOf(19.99))
                 .build();
 
         when(menuRepository.save(any(Menu.class))).thenReturn(
             Menu.builder()
                 .id(3L)
-                .descripcion("Cookie de Prueba")
-                .precio(BigDecimal.valueOf(19.99))
+                .description("Test Cookie")
+                .price(BigDecimal.valueOf(19.99))
                 .build()
         );
 

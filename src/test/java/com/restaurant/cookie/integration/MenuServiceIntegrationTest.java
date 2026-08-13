@@ -1,8 +1,8 @@
 package com.restaurant.cookie.integration;
 
-import com.restaurant.cookie.model.Ingrediente;
+import com.restaurant.cookie.model.Ingredient;
 import com.restaurant.cookie.model.Menu;
-import com.restaurant.cookie.repository.IngredienteRepository;
+import com.restaurant.cookie.repository.IngredientRepository;
 import com.restaurant.cookie.repository.MenuRepository;
 import com.restaurant.cookie.service.MenuService;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,35 +28,35 @@ class MenuServiceIntegrationTest {
     private MenuRepository menuRepository;
 
     @Autowired
-    private IngredienteRepository ingredienteRepository;
+    private IngredientRepository ingredientRepository;
 
-    private Ingrediente ingrediente;
+    private Ingredient ingredient;
 
     @BeforeEach
     void setUp() {
         menuRepository.deleteAll();
-        ingredienteRepository.deleteAll();
+        ingredientRepository.deleteAll();
 
-        ingrediente = Ingrediente.builder()
-                .nombre("Chocolate")
-                .cantidad(500.0)
-                .unidad("g")
+        ingredient = Ingredient.builder()
+                .name("Chocolate")
+                .quantity(500.0)
+                .unit("g")
                 .build();
-        ingredienteRepository.save(ingrediente);
+        ingredientRepository.save(ingredient);
     }
 
     @Test
     @DisplayName("Crear y obtener menú")
     void testCrearYObtenerMenu() {
         // Arrange
-        Menu nuevoMenu = Menu.builder()
-                .descripcion("Cookie de Chocolate")
-                .precio(BigDecimal.valueOf(29.99))
-                .ingredientes(new ArrayList<>(List.of(ingrediente)))
+        Menu newMenu = Menu.builder()
+                .description("Chocolate Cookie")
+                .price(BigDecimal.valueOf(29.99))
+                .ingredients(new ArrayList<>(List.of(ingredient)))
                 .build();
 
         // Act
-        Menu menuGuardado = menuService.crearRegistro(nuevoMenu);
+        Menu menuGuardado = menuService.crearRegistro(newMenu);
 
         // Assert
         assertNotNull(menuGuardado);
@@ -69,14 +69,14 @@ class MenuServiceIntegrationTest {
     void testObtenerTodosLosMenus() {
         // Arrange
         Menu menu1 = Menu.builder()
-                .descripcion("Cookie 1")
-                .precio(BigDecimal.valueOf(25.0))
-                .ingredientes(new ArrayList<>())
+                .description("Cookie 1")
+                .price(BigDecimal.valueOf(25.0))
+                .ingredients(new ArrayList<>())
                 .build();
         Menu menu2 = Menu.builder()
-                .descripcion("Cookie 2")
-                .precio(BigDecimal.valueOf(30.0))
-                .ingredientes(new ArrayList<>())
+                .description("Cookie 2")
+                .price(BigDecimal.valueOf(30.0))
+                .ingredients(new ArrayList<>())
                 .build();
 
         menuService.crearRegistro(menu1);
@@ -98,28 +98,28 @@ class MenuServiceIntegrationTest {
 
         // Assert
         assertNotNull(menusDisponibles);
-        assertTrue(menusDisponibles.stream().allMatch(m -> m.getEstado() == 0));
+        assertTrue(menusAvailable.stream().allMatch(m -> m.getStatus() == 0));
     }
 
     @Test
-    @DisplayName("Agregar ingredientes a menú")
+    @DisplayName("Agregar ingredients a menú")
     void testAgregarIngredientesAlMenu() {
         // Arrange
         Menu menu = Menu.builder()
-                .descripcion("Cookie Nueva")
-                .precio(BigDecimal.valueOf(25.0))
-                .ingredientes(new ArrayList<>())
+                .description("New Cookie")
+                .price(BigDecimal.valueOf(25.0))
+                .ingredients(new ArrayList<>())
                 .build();
-        Menu menuGuardado = menuService.crearRegistro(menu);
+        Menu savedMenu = menuService.createRecord(menu);
 
         // Act
         Menu menuConIngredientes = menuService.agregarIngredientesAlRegistro(
             menuGuardado.getId(), 
-            List.of(ingrediente.getId().intValue())
+            List.of(ingredient.getId().intValue())
         );
 
         // Assert
         assertNotNull(menuConIngredientes);
-        assertTrue(menuConIngredientes.getIngredientes().size() > 0);
+        assertTrue(menuConIngredientes.getIngredients().size() > 0);
     }
 }

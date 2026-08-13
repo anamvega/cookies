@@ -2,26 +2,24 @@ package com.restaurant.cookie.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
-@Table(name = "ingredientes")
+@Table(name = "ingredients")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Ingrediente {
+public class Ingredient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    @Column(nullable = false)
-    private String nombre;
-    
-    @Column(nullable = false)
-    private Double cantidad;
-    
-    @Column(nullable = false)
-    private String unidad; // ej: kg, g, ml, l, etc.
 
+    @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
+    private Double quantity;
+
+    @Column(nullable = false)
+    private String unit; // e.g.: kg, g, ml, l, etc.
 }

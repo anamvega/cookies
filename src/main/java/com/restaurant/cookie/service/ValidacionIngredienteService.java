@@ -1,46 +1,46 @@
 package com.restaurant.cookie.service;
 
-import com.restaurant.cookie.model.Ingrediente;
-import com.restaurant.cookie.repository.IngredienteRepository;
+import com.restaurant.cookie.model.Ingredient;
+import com.restaurant.cookie.repository.IngredientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
- * Servicio para validar disponibilidad de ingredientes
+ * Servicio para validar disponibilidad de ingredients
  */
 @Service
 @RequiredArgsConstructor
 public class ValidacionIngredienteService {
 
-    private final IngredienteRepository ingredienteRepository;
+    private final IngredientRepository ingredientRepository;
 
     /**
-     * Verifica si todos los ingredientes están disponibles en el inventario
+     * Verifica si todos los ingredients están disponibles en el inventario
      * 
-     * @param ingredientesRequeridos Lista de ingredientes a validar
+     * @param ingredientesRequeridos Lista de ingredients a validar
      * @return true si todos están disponibles, false en caso contrario
      */
-    public boolean validarDisponibilidadIngredientes(List<Ingrediente> ingredientesRequeridos) {
+    public boolean validarDisponibilidadIngredientes(List<Ingredient> ingredientesRequeridos) {
         if (ingredientesRequeridos == null || ingredientesRequeridos.isEmpty()) {
-            return true; // Si no hay ingredientes requeridos, está disponible
+            return true; // Si no hay ingredients requeridos, está disponible
         }
 
-        // Obtener todos los ingredientes disponibles
-        List<Ingrediente> ingredientesDisponibles = ingredienteRepository.findAll();
+        // Obtener todos los ingredients disponibles
+        List<Ingredient> ingredientesDisponibles = ingredientRepository.findAll();
 
-        // Verificar cada ingrediente requerido
-        for (Ingrediente requerido : ingredientesRequeridos) {
-            boolean encontrado = ingredientesDisponibles.stream()
-                    .anyMatch(disponible -> 
-                        disponible.getNombre().equalsIgnoreCase(requerido.getNombre())
-                        && disponible.getCantidad() != null 
-                        && disponible.getCantidad() > 0
+        // Verify each required ingredient
+        for (Ingredient required : ingredientesRequeridos) {
+            boolean found = ingredientesDisponibles.stream()
+                    .anyMatch(available -> 
+                        available.getName().equalsIgnoreCase(required.getName())
+                        && available.getQuantity() != null 
+                        && available.getQuantity() > 0
                     );
 
-            if (!encontrado) {
-                return false; // Si alguno no está disponible
+            if (!found) {
+                return false;
             }
         }
 
@@ -48,27 +48,27 @@ public class ValidacionIngredienteService {
     }
 
     /**
-     * Obtiene detalles de qué ingredientes no están disponibles
+     * Obtiene detalles de qué ingredients no están disponibles
      * 
-     * @param ingredientesRequeridos Lista de ingredientes a validar
-     * @return Lista de ingredientes no disponibles
+     * @param ingredientesRequeridos Lista de ingredients a validar
+     * @return Lista de ingredients no disponibles
      */
-    public List<String> obtenerIngredientesNoDisponibles(List<Ingrediente> ingredientesRequeridos) {
+    public List<String> obtenerIngredientesNoDisponibles(List<Ingredient> ingredientesRequeridos) {
         if (ingredientesRequeridos == null || ingredientesRequeridos.isEmpty()) {
             return List.of();
         }
 
-        List<Ingrediente> ingredientesDisponibles = ingredienteRepository.findAll();
+        List<Ingredient> ingredientesDisponibles = ingredientRepository.findAll();
 
         return ingredientesRequeridos.stream()
-                .filter(requerido -> !ingredientesDisponibles.stream()
-                        .anyMatch(disponible -> 
-                            disponible.getNombre().equalsIgnoreCase(requerido.getNombre())
-                            && disponible.getCantidad() != null 
-                            && disponible.getCantidad() > 0
+                .filter(required -> !ingredientesDisponibles.stream()
+                        .anyMatch(available -> 
+                            available.getName().equalsIgnoreCase(required.getName())
+                            && available.getQuantity() != null 
+                            && available.getQuantity() > 0
                         )
                 )
-                .map(Ingrediente::getNombre)
+                .map(Ingredient::getName)
                 .toList();
     }
 }

@@ -23,7 +23,7 @@ class MenuControllerIntegrationTest {
         Map<String, Object> payload = Map.of(
                 "descripcion", "Pizza Margarita",
                 "precio", 120.5,
-                "ingredientes", List.of("Queso", "Tomate")
+                "ingredients", List.of("Queso", "Tomate")
         );
 
         ResponseEntity<Map> response = restTemplate.postForEntity("/registros", payload, Map.class);

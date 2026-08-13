@@ -1,9 +1,9 @@
 package com.restaurant.cookie.service;
 
 import com.restaurant.cookie.gateway.MenuGateway;
+import com.restaurant.cookie.model.Ingredient;
 import com.restaurant.cookie.model.Menu;
-import com.restaurant.cookie.model.Ingrediente;
-import com.restaurant.cookie.repository.IngredienteRepository;
+import com.restaurant.cookie.repository.IngredientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,19 +15,19 @@ public class MenuService {
 
     private final MenuGateway menuGateway;
     private final ValidacionIngredienteService validacionIngredienteService;
-    private final IngredienteRepository ingredienteRepository;
+    private final IngredientRepository ingredientRepository;
 
     /**
-     * Crear un nuevo registro validando disponibilidad de ingredientes
+     * Crear un nuevo registro validando disponibilidad de ingredients
      * Si algún ingrediente no está disponible, el estado se establece en 1 (no disponible)
      */
     public Menu crearRegistro(Menu registro) {
-        // Validar disponibilidad de ingredientes
-        boolean disponible = validacionIngredienteService.validarDisponibilidadIngredientes(registro.getIngredientes());
+        // Validar disponibilidad de ingredients
+        boolean disponible = validacionIngredienteService.validarDisponibilidadIngredientes(registro.getIngredients());
         
-        // Establecer el estado basado en la disponibilidad
-        // 0 = disponible, 1 = no disponible
-        registro.setEstado(disponible ? 0 : 1);
+        // Set status based on availability
+        // 0 = available, 1 = not available
+        registro.setStatus(disponible ? 0 : 1);
         
         return menuGateway.save(registro);
     }
@@ -46,7 +46,7 @@ public class MenuService {
      */
     public List<Menu> obtenerRegistrosDisponibles() {
         return menuGateway.findAll().stream()
-                .filter(menu -> menu.getEstado() == 0)
+                .filter(menu -> menu.getStatus() == 0)
                 .toList();
     }
 
@@ -55,26 +55,26 @@ public class MenuService {
      */
     public List<Menu> obtenerRegistrosNoDisponibles() {
         return menuGateway.findAll().stream()
-                .filter(menu -> menu.getEstado() == 1)
+                .filter(menu -> menu.getStatus() == 1)
                 .toList();
     }
 
     /**
-     * Actualizar el estado de un registro basado en disponibilidad de ingredientes
+     * Actualizar el estado de un registro basado en disponibilidad de ingredients
      */
     public Menu actualizarEstadoRegistro(Long id) {
         Menu registro = obtenerRegistroPorId(id);
-        boolean disponible = validacionIngredienteService.validarDisponibilidadIngredientes(registro.getIngredientes());
-        registro.setEstado(disponible ? 0 : 1);
+        boolean disponible = validacionIngredienteService.validarDisponibilidadIngredientes(registro.getIngredients());
+        registro.setStatus(disponible ? 0 : 1);
         return menuGateway.save(registro);
     }
 
     /**
-     * Agregar ingredientes al registro por sus IDs
+     * Agregar ingredients al registro por sus IDs
      * 
      * @param registroId ID del registro (menú)
-     * @param ingredientesIds Lista de IDs de ingredientes a agregar
-     * @return El registro actualizado con los nuevos ingredientes
+     * @param ingredientesIds Lista de IDs de ingredients a agregar
+     * @return El registro actualizado con los nuevos ingredients
      */
     public Menu agregarIngredientesAlRegistro(Long registroId, List<Integer> ingredientesIds) {
         Menu registro = obtenerRegistroPorId(registroId);
@@ -82,12 +82,12 @@ public class MenuService {
         if (ingredientesIds != null && !ingredientesIds.isEmpty()) {
             for (Integer id : ingredientesIds) {
                 try {
-                    Ingrediente ingrediente = ingredienteRepository.findById(id.longValue())
-                            .orElseThrow(() -> new RuntimeException("Ingrediente no encontrado con id: " + id));
+                    Ingredient ingredient = ingredientRepository.findById(id.longValue())
+                            .orElseThrow(() -> new RuntimeException("Ingredient no encontrado con id: " + id));
                     
-                    // Agregar el ingrediente existente al registro
-                    if (!registro.getIngredientes().contains(ingrediente)) {
-                        registro.getIngredientes().add(ingrediente);
+                    // Agregar el ingredient existente al registro
+                    if (!registro.getIngredients().contains(ingredient)) {
+                        registro.getIngredients().add(ingredient);
                     }
                 } catch (RuntimeException e) {
                     throw new RuntimeException("Error al agregar ingrediente con id: " + id + " - " + e.getMessage());
@@ -95,9 +95,9 @@ public class MenuService {
             }
         }
 
-        // Recalcular el estado basado en la disponibilidad
-        boolean disponible = validacionIngredienteService.validarDisponibilidadIngredientes(registro.getIngredientes());
-        registro.setEstado(disponible ? 0 : 1);
+        // Recalculate status based on availability
+        boolean disponible = validacionIngredienteService.validarDisponibilidadIngredientes(registro.getIngredients());
+        registro.setStatus(disponible ? 0 : 1);
 
         return menuGateway.save(registro);
     }

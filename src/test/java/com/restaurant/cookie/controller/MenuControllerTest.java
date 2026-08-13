@@ -1,6 +1,6 @@
 package com.restaurant.cookie.controller;
 
-import com.restaurant.cookie.model.Ingrediente;
+import com.restaurant.cookie.model.Ingredient;
 import com.restaurant.cookie.model.Menu;
 import com.restaurant.cookie.service.MenuService;
 import com.restaurant.cookie.service.ValidacionIngredienteService;
@@ -38,23 +38,23 @@ class MenuControllerTest {
     private MenuController menuController;
 
     private Menu menu;
-    private Ingrediente ingrediente;
+    private Ingredient ingredient;
 
     @BeforeEach
     void setUp() {
-        ingrediente = Ingrediente.builder()
+        ingredient = Ingredient.builder()
                 .id(1L)
-                .nombre("Chocolate")
-                .cantidad(500.0)
-                .unidad("g")
+                .name("Chocolate")
+                .quantity(500.0)
+                .unit("g")
                 .build();
 
         menu = Menu.builder()
                 .id(1L)
-                .descripcion("Cookie de Chocolate")
-                .precio(BigDecimal.valueOf(29.99))
-                .estado(0)
-                .ingredientes(new ArrayList<>(List.of(ingrediente)))
+                .description("Cookie de Chocolate")
+                .price(BigDecimal.valueOf(29.99))
+                .status(0)
+                .ingredients(new ArrayList<>(List.of(ingredient)))
                 .build();
     }
 
@@ -78,7 +78,7 @@ class MenuControllerTest {
         // Assert
         assertNotNull(resultado);
         assertEquals(HttpStatus.CREATED, resultado.getStatusCode());
-        assertEquals("Cookie de Chocolate", resultado.getBody().getDescripcion());
+        assertEquals("Cookie de Chocolate", resultado.getBody().getDescription());
         verify(menuService, times(1)).crearRegistro(any());
     }
 
@@ -141,7 +141,7 @@ class MenuControllerTest {
         // Assert
         assertNotNull(resultado);
         assertEquals(HttpStatus.OK, resultado.getStatusCode());
-        assertEquals("Cookie de Chocolate", resultado.getBody().getDescripcion());
+        assertEquals("Cookie de Chocolate", resultado.getBody().getDescription());
         verify(menuService, times(1)).obtenerRegistroPorId(1L);
     }
 
@@ -158,7 +158,7 @@ class MenuControllerTest {
         // Assert
         assertNotNull(resultado);
         assertEquals(HttpStatus.OK, resultado.getStatusCode());
-        assertEquals(0, resultado.getBody().get(0).getEstado());
+        assertEquals(0, resultado.getBody().get(0).getStatus());
         verify(menuService, times(1)).obtenerRegistrosDisponibles();
     }
 
@@ -168,10 +168,10 @@ class MenuControllerTest {
         // Arrange
         Menu menuNoDisponible = Menu.builder()
                 .id(2L)
-                .descripcion("Cookie Especial")
-                .precio(BigDecimal.valueOf(39.99))
-                .estado(1)
-                .ingredientes(new ArrayList<>())
+                .description("Cookie Especial")
+                .price(BigDecimal.valueOf(39.99))
+                .status(1)
+                .ingredients(new ArrayList<>())
                 .build();
 
         List<Menu> menusNoDisponibles = List.of(menuNoDisponible);
@@ -183,12 +183,12 @@ class MenuControllerTest {
         // Assert
         assertNotNull(resultado);
         assertEquals(HttpStatus.OK, resultado.getStatusCode());
-        assertEquals(1, resultado.getBody().get(0).getEstado());
+        assertEquals(1, resultado.getBody().get(0).getStatus());
         verify(menuService, times(1)).obtenerRegistrosNoDisponibles();
     }
 
     @Test
-    @DisplayName("GET /{id}/ingredientes-faltantes - Debe retornar ingredientes faltantes")
+    @DisplayName("GET /{id}/ingredients-faltantes - Debe retornar ingredients faltantes")
     void testObtenerIngredientesFaltantes() {
         // Arrange
         List<String> ingredientesFaltantes = List.of("Vainilla", "Mantequilla");
@@ -212,10 +212,10 @@ class MenuControllerTest {
         // Arrange
         Menu menuActualizado = Menu.builder()
                 .id(1L)
-                .descripcion("Cookie de Chocolate")
-                .precio(BigDecimal.valueOf(29.99))
-                .estado(1)
-                .ingredientes(new ArrayList<>())
+                .description("Cookie de Chocolate")
+                .price(BigDecimal.valueOf(29.99))
+                .status(1)
+                .ingredients(new ArrayList<>())
                 .build();
 
         when(menuService.actualizarEstadoRegistro(1L)).thenReturn(menuActualizado);
@@ -226,27 +226,27 @@ class MenuControllerTest {
         // Assert
         assertNotNull(resultado);
         assertEquals(HttpStatus.OK, resultado.getStatusCode());
-        assertEquals(1, resultado.getBody().getEstado());
+        assertEquals(1, resultado.getBody().getStatus());
         verify(menuService, times(1)).actualizarEstadoRegistro(1L);
     }
 
     @Test
-    @DisplayName("POST /{id}/agregar-ingredientes - Debe agregar ingredientes")
+    @DisplayName("POST /{id}/agregar-ingredients - Debe agregar ingredients")
     void testAgregarIngredientes() {
         // Arrange
-        Ingrediente vainilla = Ingrediente.builder()
+        Ingredient vainilla = Ingredient.builder()
                 .id(2L)
-                .nombre("Vainilla")
-                .cantidad(100.0)
-                .unidad("ml")
+                .name("Vanilla")
+                .quantity(100.0)
+                .unit("ml")
                 .build();
 
         Menu menuConNuevosIngredientes = Menu.builder()
                 .id(1L)
-                .descripcion("Cookie de Chocolate")
-                .precio(BigDecimal.valueOf(29.99))
-                .estado(0)
-                .ingredientes(new ArrayList<>(List.of(ingrediente, vainilla)))
+                .description("Cookie de Chocolate")
+                .price(BigDecimal.valueOf(29.99))
+                .status(0)
+                .ingredients(new ArrayList<>(List.of(ingredient, vainilla)))
                 .build();
 
         when(menuService.agregarIngredientesAlRegistro(1L, List.of(2)))
@@ -262,12 +262,12 @@ class MenuControllerTest {
         // Assert
         assertNotNull(resultado);
         assertEquals(HttpStatus.OK, resultado.getStatusCode());
-        assertEquals(2, resultado.getBody().getIngredientes().size());
+        assertEquals(2, resultado.getBody().getIngredients().size());
         verify(menuService, times(1)).agregarIngredientesAlRegistro(1L, List.of(2));
     }
 
     @Test
-    @DisplayName("POST /{id}/agregar-ingredientes - Debe lanzar excepción si ingredientes vacío")
+    @DisplayName("POST /{id}/agregar-ingredients - Debe lanzar excepción si ingredients vacío")
     void testAgregarIngredientesVacio() {
         // Arrange
         Map<String, Object> request = Map.of(

@@ -1,9 +1,9 @@
 package com.restaurant.cookie.repository;
 
-import com.restaurant.cookie.model.Ingrediente;
+import com.restaurant.cookie.model.Ingredient;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface IngredienteRepository extends JpaRepository<Ingrediente, Long> {
+public interface IngredientRepository extends JpaRepository<Ingredient, Long> {
 }

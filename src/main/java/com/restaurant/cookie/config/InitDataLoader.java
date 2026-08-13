@@ -1,7 +1,7 @@
 package com.restaurant.cookie.config;
 
-import com.restaurant.cookie.model.Ingrediente;
-import com.restaurant.cookie.repository.IngredienteRepository;
+import com.restaurant.cookie.model.Ingredient;
+import com.restaurant.cookie.repository.IngredientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -10,85 +10,85 @@ import java.util.List;
 
 /**
  * Cargador de datos iniciales
- * Crea ingredientes por defecto al iniciar la aplicación
+ * Crea ingredients por defecto al iniciar la aplicación
  */
 @Component
 @RequiredArgsConstructor
 public class InitDataLoader implements CommandLineRunner {
 
-    private final IngredienteRepository ingredienteRepository;
+    private final IngredientRepository ingredientRepository;
 
     @Override
     public void run(String... args) throws Exception {
-        // Verificar si ya existen ingredientes
-        if (ingredienteRepository.count() > 0) {
+        // Verificar si ya existen ingredients
+        if (ingredientRepository.count() > 0) {
             return; // No cargar si ya hay datos
         }
 
-        // Crear ingredientes por defecto
-        List<Ingrediente> ingredientesDefault = List.of(
-            Ingrediente.builder()
-                .nombre("Harina")
-                .cantidad(1000.0)
-                .unidad("g")
+        // Create default ingredients
+        List<Ingredient> defaultIngredients = List.of(
+            Ingredient.builder()
+                .name("Flour")
+                .quantity(1000.0)
+                .unit("g")
                 .build(),
             
-            Ingrediente.builder()
-                .nombre("Azúcar")
-                .cantidad(500.0)
-                .unidad("g")
+            Ingredient.builder()
+                .name("Sugar")
+                .quantity(500.0)
+                .unit("g")
                 .build(),
             
-            Ingrediente.builder()
-                .nombre("Mantequilla")
-                .cantidad(250.0)
-                .unidad("g")
+            Ingredient.builder()
+                .name("Butter")
+                .quantity(250.0)
+                .unit("g")
                 .build(),
             
-            Ingrediente.builder()
-                .nombre("Huevos")
-                .cantidad(12.0)
-                .unidad("unidad")
+            Ingredient.builder()
+                .name("Eggs")
+                .quantity(12.0)
+                .unit("unit")
                 .build(),
             
-            Ingrediente.builder()
-                .nombre("Chocolate")
-                .cantidad(500.0)
-                .unidad("g")
+            Ingredient.builder()
+                .name("Chocolate")
+                .quantity(500.0)
+                .unit("g")
                 .build(),
             
-            Ingrediente.builder()
-                .nombre("Leche")
-                .cantidad(1.0)
-                .unidad("l")
+            Ingredient.builder()
+                .name("Milk")
+                .quantity(1.0)
+                .unit("l")
                 .build(),
             
-            Ingrediente.builder()
-                .nombre("Vainilla")
-                .cantidad(100.0)
-                .unidad("ml")
+            Ingredient.builder()
+                .name("Vanilla")
+                .quantity(100.0)
+                .unit("ml")
                 .build(),
             
-            Ingrediente.builder()
-                .nombre("Polvo de Hornear")
-                .cantidad(100.0)
-                .unidad("g")
+            Ingredient.builder()
+                .name("Baking Powder")
+                .quantity(100.0)
+                .unit("g")
                 .build(),
             
-            Ingrediente.builder()
-                .nombre("Sal")
-                .cantidad(50.0)
-                .unidad("g")
+            Ingredient.builder()
+                .name("Salt")
+                .quantity(50.0)
+                .unit("g")
                 .build(),
             
-            Ingrediente.builder()
-                .nombre("Cacao en Polvo")
-                .cantidad(200.0)
-                .unidad("g")
+            Ingredient.builder()
+                .name("Cocoa Powder")
+                .quantity(200.0)
+                .unit("g")
                 .build()
         );
 
-        ingredienteRepository.saveAll(ingredientesDefault);
-        System.out.println("✓ Se cargaron " + ingredientesDefault.size() + " ingredientes por defecto");
+        ingredientRepository.saveAll(defaultIngredients);
+        System.out.println("✓ Se cargaron " + defaultIngredients.size() + " ingredients por defecto");
     }
 }
