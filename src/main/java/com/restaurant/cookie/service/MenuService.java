@@ -1,8 +1,7 @@
 package com.restaurant.cookie.service;
 
-import com.restaurant.cookie.gateway.RegistroGateway;
+import com.restaurant.cookie.gateway.MenuGateway;
 import com.restaurant.cookie.model.Menu;
-import com.restaurant.cookie.model.Ingrediente;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -10,24 +9,24 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class RegistroService {
+public class MenuService {
 
-    private final RegistroGateway registroGateway;
+    private final MenuGateway menuGateway;
 
     public Menu crearRegistro(Menu registro) {
         // Establecer la relación inversa para los ingredientes
         if (registro.getIngredientes() != null) {
             registro.getIngredientes().forEach(ingrediente -> ingrediente.setRegistro(registro));
         }
-        return registroGateway.save(registro);
+        return menuGateway.save(registro);
     }
 
     public List<Menu> obtenerTodosLosRegistros() {
-        return registroGateway.findAll();
+        return menuGateway.findAll();
     }
 
     public Menu obtenerRegistroPorId(Long id) {
-        return registroGateway.findById(id)
+        return menuGateway.findById(id)
                 .orElseThrow(() -> new RuntimeException("Registro no encontrado con id: " + id));
     }
 }

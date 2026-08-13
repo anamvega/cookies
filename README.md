@@ -158,7 +158,7 @@ La configuración se encuentra en `src/main/resources/application.properties`:
 
 ## Patrón Gateway
 
-El patrón Gateway en `RegistroGateway` actúa como una capa de abstracción entre el servicio y el repositorio:
+El patrón Gateway en `MenuGateway` actúa como una capa de abstracción entre el servicio y el repositorio:
 
 - **Encapsula** la lógica de acceso a datos
 - **Desacopla** la capa de servicio de la implementación del repositorio
