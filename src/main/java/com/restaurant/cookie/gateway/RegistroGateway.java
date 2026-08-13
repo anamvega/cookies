@@ -1,6 +1,6 @@
 package com.restaurant.cookie.gateway;
 
-import com.restaurant.cookie.model.Registro;
+import com.restaurant.cookie.model.Menu;
 import com.restaurant.cookie.repository.RegistroRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -18,15 +18,15 @@ public class RegistroGateway {
 
     private final RegistroRepository registroRepository;
 
-    public Registro save(Registro registro) {
-        return registroRepository.save(registro);
+    public Menu save(Menu menu) {
+        return registroRepository.save(menu);
     }
 
-    public List<Registro> findAll() {
+    public List<Menu> findAll() {
         return registroRepository.findAll();
     }
 
-    public Optional<Registro> findById(Long id) {
+    public Optional<Menu> findById(Long id) {
         return registroRepository.findById(id);
     }
 

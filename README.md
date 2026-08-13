@@ -45,7 +45,7 @@ El proyecto sigue una arquitectura MVC estratificada con los siguientes componen
 ## Estructura del Proyecto
 
 ```
-src/main/java/com/example/cookie/
+src/main/java/com/restaurant/cookie/
 ├── CookieApplication.java          # Clase principal Spring Boot
 ├── controller/
 │   └── RegistroController.java     # Endpoint REST

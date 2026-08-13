@@ -1,6 +1,6 @@
 package com.restaurant.cookie.repository;
 
-import com.restaurant.cookie.model.Registro;
+import com.restaurant.cookie.model.Menu;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -9,21 +9,19 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface RegistroRepository extends JpaRepository<Registro, Long> {
-    List<Registro> findAll();
+public interface RegistroRepository extends JpaRepository<Menu, Long> {
+    List<Menu> findAll();
 
     // Active Record style queries
-    List<Registro> findByDescripcion(String descripcion);
+    List<Menu> findByDescripcion(String descripcion);
 
-    List<Registro> findByPrecioGreaterThan(BigDecimal precio);
+    List<Menu> findByPrecioGreaterThan(BigDecimal precio);
 
-    List<Registro> findByPrecioLessThan(BigDecimal precio);
+    List<Menu> findByPrecioLessThan(BigDecimal precio);
 
-    Optional<Registro> findById(Long id);
+    Optional<Menu> findById(Long id);
 
     boolean existsByDescripcion(String descripcion);
-
-    Long count();
 
     void deleteById(Long id);
 }

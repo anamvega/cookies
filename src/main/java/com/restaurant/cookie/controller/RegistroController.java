@@ -1,6 +1,6 @@
 package com.restaurant.cookie.controller;
 
-import com.restaurant.cookie.model.Registro;
+import com.restaurant.cookie.model.Menu;
 import com.restaurant.cookie.model.Ingrediente;
 import com.restaurant.cookie.service.RegistroService;
 import lombok.RequiredArgsConstructor;
@@ -20,14 +20,14 @@ public class RegistroController {
     private final RegistroService registroService;
 
     @PostMapping
-    public ResponseEntity<Registro> crearNuevoPlato(@RequestBody Map<String, Object> request) {
+    public ResponseEntity<Menu> crearNuevoPlato(@RequestBody Map<String, Object> request) {
         String descripcion = (String) request.get("descripcion");
         Double precio = (Double) request.get("precio");
         
         @SuppressWarnings("unchecked")
         List<String> ingredientesNombres = (List<String>) request.get("ingredientes");
 
-        Registro registro = Registro.builder()
+        Menu registro = Menu.builder()
                 .descripcion(descripcion)
                 .precio(BigDecimal.valueOf(precio))
                 .build();
@@ -43,13 +43,13 @@ public class RegistroController {
             });
         }
 
-        Registro registroGuardado = registroService.crearRegistro(registro);
+        Menu registroGuardado = registroService.crearRegistro(registro);
         return ResponseEntity.status(HttpStatus.CREATED).body(registroGuardado);
     }
 
     @GetMapping
-    public ResponseEntity<List<Registro>> obtenerTodos() {
-        List<Registro> registros = registroService.obtenerTodosLosRegistros();
+    public ResponseEntity<List<Menu>> obtenerTodos() {
+        List<Menu> registros = registroService.obtenerTodosLosRegistros();
         return ResponseEntity.ok(registros);
     }
 }
